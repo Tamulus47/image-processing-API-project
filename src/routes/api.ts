@@ -11,16 +11,13 @@ api_route.get('/', (req: Request ,res: Response) => {
     const imgheight: string = req.query.height as string
     const imgpath= path.resolve('./') + `/images/${imgname}.jpg`
     const resizpath= path.resolve('./')+`/resized_images/${imgname}.jpg`
-    
 
     if(imgname==""){
         return res.status(400).send("please add image name")
     }
-
     if(imgname===undefined){
         return res.status(400).send("please add ?filename query")
     }
-
     if(!names.includes(`${imgname}.jpg`)){
         return res.status(404).send("image not found")
     }

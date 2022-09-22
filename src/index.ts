@@ -13,3 +13,5 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api/images", api_route)
+
+export default app;
