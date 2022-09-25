@@ -1,8 +1,10 @@
 import { Request, Response, Router } from 'express';
-import path from 'path';
+import path, { resolve } from 'path';
 import names from '../images_data/data';
 import imageProccess from '../images_data/processing';
 import { checkfun } from '../images_data/processing';
+import fs from 'fs';
+import { rejects } from 'assert';
 
 const api_route = Router();
 
@@ -11,7 +13,7 @@ api_route.get('/', (req: Request, res: Response): unknown => {
   const imgwidth = req.query.width as string;
   const imgheight = req.query.height as string;
   const imgpath = path.resolve('./') + `/images/${imgname}.jpg`;
-  const resizpath = path.resolve('./') + `/resized_images/${imgname}.jpg`;
+  const resizpath = path.resolve('./') + `/resized_images/${imgname+'-'+imgwidth+'-'+imgheight}.jpg`;
 
   if (imgname == '') {
     return res.status(400).send('please add image name');
@@ -46,11 +48,22 @@ api_route.get('/', (req: Request, res: Response): unknown => {
   if (parseInt(imgheight) === 0) {
     return res.status(400).send("can't set height to zero");
   } else {
-    imageProccess(imgpath, imgwidth, imgheight, resizpath);
+    if(fs.existsSync(resizpath)===false){
+      imageProccess(imgpath,imgwidth,imgheight,resizpath)
+
+      setTimeout(()=>{res.status(200).sendFile(resizpath)},2000)
+
+
+                    //.then not working sendFile executed before imageProccess function make the image
+      // const proccess = new Promise((resolve,rejects)=>{
+      //   resolve(imageProccess(imgpath,imgwidth,imgheight,resizpath))
+      // })
+      // proccess.then (()=>{res.status(200).sendFile(resizpath)})
+    }
+    else{
+        res.status(200).sendFile(resizpath);
+    }
   }
-  setTimeout((): void => {
-    res.status(200).sendFile(resizpath);
-  }, 1000);
 });
 
 export default api_route;
