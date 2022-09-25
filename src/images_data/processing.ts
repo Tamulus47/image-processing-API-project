@@ -5,11 +5,10 @@ function imageProccess(
   imgwidth: string,
   imgheight: string,
   resizpath: string
-): string {
+): void {
   sharp(imgpath)
     .resize(parseInt(imgwidth), parseInt(imgheight))
     .toFile(resizpath);
-  return resizpath;
 }
 
 export function checkfun(img: string): unknown {

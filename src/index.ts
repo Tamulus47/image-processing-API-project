@@ -13,7 +13,7 @@ app.get('/', (req: Request, res: Response): void => {
   res
     .status(200)
     .send(
-      'welcome please type /api/images?filename="image name"&width="image width"&height="image height"'
+      `welcome please type /api/images?filename="image name"&width="image width"&height="image height"`
     );
 });
 

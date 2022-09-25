@@ -6,31 +6,35 @@ import path from 'path';
 
 const req = supertest(app);
 
-it('test first endpoint', async () => {
-  const res = await req.get('/');
-  expect(res.status).toBe(200);
-});
-
-it('test image endpoint', async () => {
-  const res = await req.get(
-    '/api/images?filename=encenadaport&height=200&width=200'
-  );
-  expect(res.status).toBe(200);
-});
 describe('test image processing', () => {
-  it('test function exists', async () => {
-    expect(imageProccess).toBeDefined;
+  it('test first endpoint', async () => {
+    const res = await req.get('/');
+    expect(res.status).toBe(200);
   });
 
-  it('test function calle', async () => {
-    expect(imageProccess).toHaveBeenCalledBefore;
-  });
-
-  it('test image exists', async () => {
-    await req.get('/api/images?filename=encenadaport&height=200&width=200');
-    const exists = fs.existsSync(
-      path.resolve('./') + '/resized_images/encenadaport.jpg'
+  it('test endpoints', async () => {
+    const res = await req.get(
+      '/api/images?filename=encenadaport&height=200&width=200'
     );
-    expect(exists).toBeTruthy();
+    expect(res.status).toBe(200);
+  });
+});
+
+describe('test image processing', () => {
+  it('test image exists', async () => {
+    const imgpath = path.resolve('./') + '/images/encenadaport.jpg';
+    const resizpath = path.resolve('./') + '/resized_images/encenadaport.jpg';
+    const imgwidth = '200';
+    const imgheight = '200';
+
+    if (fs.existsSync(resizpath)) {
+      fs.unlinkSync(resizpath);
+    }
+
+    imageProccess(imgpath, imgwidth, imgheight, resizpath);
+
+    setTimeout(() => {
+      expect(fs.existsSync(resizpath)).toEqual(true);
+    }, 1000);
   });
 });

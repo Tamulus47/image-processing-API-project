@@ -7,12 +7,11 @@ import { checkfun } from '../images_data/processing';
 const api_route = Router();
 
 api_route.get('/', (req: Request, res: Response): unknown => {
-  const imgname: string = req.query.filename as string;
-  const imgwidth: string = req.query.width as string;
-  const imgheight: string = req.query.height as string;
-  const imgpath: string = path.resolve('./') + `/images/${imgname}.jpg`;
-  const resizpath: string =
-    path.resolve('./') + `/resized_images/${imgname}.jpg`;
+  const imgname = req.query.filename as string;
+  const imgwidth = req.query.width as string;
+  const imgheight = req.query.height as string;
+  const imgpath = path.resolve('./') + `/images/${imgname}.jpg`;
+  const resizpath = path.resolve('./') + `/resized_images/${imgname}.jpg`;
 
   if (imgname == '') {
     return res.status(400).send('please add image name');
