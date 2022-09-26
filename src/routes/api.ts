@@ -12,7 +12,9 @@ api_route.get('/', (req: Request, res: Response): unknown => {
   const imgwidth: string = req.query.width as string;
   const imgheight: string = req.query.height as string;
   const imgpath: string = path.resolve('./') + `/images/${imgname}.jpg`;
-  const resizpath: string = path.resolve('./') + `/resized_images/${imgname+'-'+imgwidth+'-'+imgheight}.jpg`;
+  const resizpath: string =
+    path.resolve('./') +
+    `/resized_images/${imgname + '-' + imgwidth + '-' + imgheight}.jpg`;
 
   if (imgname == '') {
     return res.status(400).send('please add image name');
@@ -47,15 +49,17 @@ api_route.get('/', (req: Request, res: Response): unknown => {
   if (parseInt(imgheight) === 0) {
     return res.status(400).send("can't set height to zero");
   } else {
-    if(fs.existsSync(resizpath)===false){
-     async function run(): Promise<void>{
-      await imageProccess(imgwidth,imgheight,imgpath,resizpath)
-      .then (()=>{res.status(200).sendFile(resizpath)})
-     }
-     run();
-    }
-    else{
-        res.status(200).sendFile(resizpath);
+    if (fs.existsSync(resizpath) === false) {
+      const run = async function (): Promise<void> {
+        await imageProccess(imgwidth, imgheight, imgpath, resizpath).then(
+          () => {
+            res.status(200).sendFile(resizpath);
+          }
+        );
+      };
+      run();
+    } else {
+      res.status(200).sendFile(resizpath);
     }
   }
 });

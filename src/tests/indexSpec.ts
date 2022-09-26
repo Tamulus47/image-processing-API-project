@@ -25,16 +25,19 @@ describe('test image processing', () => {
     const imgpath = path.resolve('./') + '/images/encenadaport.jpg';
     const imgwidth = '200';
     const imgheight = '200';
-    const resizpath = path.resolve('./') + `/resized_images/encenadaport${'-'+imgwidth+'-'+imgheight}.jpg`;
+    const resizpath =
+      path.resolve('./') +
+      `/resized_images/encenadaport${'-' + imgwidth + '-' + imgheight}.jpg`;
 
     if (fs.existsSync(resizpath)) {
       fs.unlinkSync(resizpath);
     }
 
-    async function run(){
-      await imageProccess(imgwidth,imgheight,imgpath,resizpath)
-      .then (()=>{expect(fs.existsSync(resizpath)).toEqual(true)})
-     }
-     run();
+    async function run() {
+      await imageProccess(imgwidth, imgheight, imgpath, resizpath).then(() => {
+        expect(fs.existsSync(resizpath)).toEqual(true);
+      });
+    }
+    run();
   });
 });
