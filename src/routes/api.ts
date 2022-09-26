@@ -48,7 +48,7 @@ api_route.get('/', (req: Request, res: Response): unknown => {
     return res.status(400).send("can't set height to zero");
   } else {
     if(fs.existsSync(resizpath)===false){
-     async function run(){
+     async function run(): Promise<void>{
       await imageProccess(imgwidth,imgheight,imgpath,resizpath)
       .then (()=>{res.status(200).sendFile(resizpath)})
      }
