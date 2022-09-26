@@ -1,19 +1,18 @@
 import { Request, Response, Router } from 'express';
-import path, { resolve } from 'path';
+import path from 'path';
 import names from '../images_data/data';
 import imageProccess from '../images_data/processing';
 import { checkfun } from '../images_data/processing';
 import fs from 'fs';
-import { rejects } from 'assert';
 
 const api_route = Router();
 
 api_route.get('/', (req: Request, res: Response): unknown => {
-  const imgname = req.query.filename as string;
-  const imgwidth = req.query.width as string;
-  const imgheight = req.query.height as string;
-  const imgpath = path.resolve('./') + `/images/${imgname}.jpg`;
-  const resizpath = path.resolve('./') + `/resized_images/${imgname+'-'+imgwidth+'-'+imgheight}.jpg`;
+  const imgname: string = req.query.filename as string;
+  const imgwidth: string = req.query.width as string;
+  const imgheight: string = req.query.height as string;
+  const imgpath: string = path.resolve('./') + `/images/${imgname}.jpg`;
+  const resizpath: string = path.resolve('./') + `/resized_images/${imgname+'-'+imgwidth+'-'+imgheight}.jpg`;
 
   if (imgname == '') {
     return res.status(400).send('please add image name');
@@ -49,16 +48,11 @@ api_route.get('/', (req: Request, res: Response): unknown => {
     return res.status(400).send("can't set height to zero");
   } else {
     if(fs.existsSync(resizpath)===false){
-      imageProccess(imgpath,imgwidth,imgheight,resizpath)
-
-      setTimeout(()=>{res.status(200).sendFile(resizpath)},2000)
-
-
-                    //.then not working sendFile executed before imageProccess function make the image
-      // const proccess = new Promise((resolve,rejects)=>{
-      //   resolve(imageProccess(imgpath,imgwidth,imgheight,resizpath))
-      // })
-      // proccess.then (()=>{res.status(200).sendFile(resizpath)})
+     async function run(){
+      await imageProccess(imgwidth,imgheight,imgpath,resizpath)
+      .then (()=>{res.status(200).sendFile(resizpath)})
+     }
+     run();
     }
     else{
         res.status(200).sendFile(resizpath);

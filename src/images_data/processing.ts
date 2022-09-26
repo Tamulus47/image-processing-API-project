@@ -1,14 +1,11 @@
-import sharp from 'sharp';
+import sharp from 'sharp'
 
-function imageProccess(
-  imgpath: string,
-  imgwidth: string,
-  imgheight: string,
-  resizpath: string
-): void {
-  sharp(imgpath)
+function imageProccess(imgwidth: string,imgheight: string,imgpath: string,resizpath: string){
+return new Promise(resolve =>{
+  resolve(sharp(imgpath)
     .resize(parseInt(imgwidth), parseInt(imgheight))
-    .toFile(resizpath);
+    .toFile(resizpath))
+})
 }
 
 export function checkfun(img: string): unknown {
