@@ -1,0 +1,21 @@
+{
+    "dev": {
+      "host": "127.0.0.1",
+      "user": "postgres",
+      "password" : "admin",
+      "database": "sos",
+      "driver": "pg",
+      "multipleStatements": true,
+      "port" :"5432"
+    },
+    "test":{
+      "host": "127.0.0.1",
+      "user": "postgres",
+      "password" : "admin",
+      "database": "test",
+      "driver": "pg",
+      "multipleStatements": true,
+      "port" :"5432"
+    }
+  }
+  
