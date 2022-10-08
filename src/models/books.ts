@@ -1,7 +1,6 @@
 import con from "../DB"
 
 export type Book={
-    id: Number;
     title: string;
     author: string;
     total_pages: Number;
@@ -21,37 +20,27 @@ export class BooksStore{
         throw new Error(`error: ${err}`)
         }
     }
-    async show(id: string): Promise<Book> {
+    async show(id: number): Promise<Book> {
         try {
-        const sql = 'SELECT * FROM books WHERE id=($1)'
-        const conn = await con.connect()
-    
-        const result = await conn.query(sql, [id])
-    
-        conn.release()
-    
-        return result.rows[0]
+            const conn = await con.connect();
+            const sql = `SELECT * FROM book WHERE id=(${id})`;
+            const result = await conn.query(sql);
+            conn.release();
+            return result.rows[0];
         } catch (err) {
             throw new Error(`Could not find book ${id}. Error: ${err}`)
         }
       }
     
-      async create(b: Book): Promise<Book> {
-          try {
-        const sql = 'INSERT INTO books (title, author, total_pages, summary) VALUES($1, $2, $3, $4) RETURNING *'
-
-        const conn = await con.connect()
-    
-        const result = await conn
-            .query(sql, [b.title, b.author, b.total_pages, b.summary])
-    
-        const book = result.rows[0]
-    
-        conn.release()
-    
-        return book
+    async create(): Promise<Book> {
+        try {
+            const conn = await con.connect()
+            const sql =  `INSERT INTO book (title, author, total_pages, type, summary) VALUES('tes1', 'tes', '3', 'tes', 'tes') RETURNING *`
+            const result = await conn.query(sql)
+            conn.release()
+            return result.rows[0]
           } catch (err) {
-              throw new Error(`Could not add new book ${b.title}. Error: ${err}`)
+                throw new Error(`Failed to add the session with the following error: ${err}`)
           }
       }
     

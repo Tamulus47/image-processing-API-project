@@ -32,9 +32,9 @@ class BooksStore {
     show(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sql = 'SELECT * FROM books WHERE id=($1)';
                 const conn = yield DB_1.default.connect();
-                const result = yield conn.query(sql, [id]);
+                const sql = `SELECT * FROM book WHERE id=(${id})`;
+                const result = yield conn.query(sql);
                 conn.release();
                 return result.rows[0];
             }
@@ -43,19 +43,17 @@ class BooksStore {
             }
         });
     }
-    create(b) {
+    create() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sql = 'INSERT INTO books (title, author, total_pages, summary) VALUES($1, $2, $3, $4) RETURNING *';
                 const conn = yield DB_1.default.connect();
-                const result = yield conn
-                    .query(sql, [b.title, b.author, b.total_pages, b.summary]);
-                const book = result.rows[0];
+                const sql = `INSERT INTO book (title, author, total_pages, type, summary) VALUES('tes1', 'tes', '3', 'tes', 'tes') RETURNING *`;
+                const result = yield conn.query(sql);
                 conn.release();
-                return book;
+                return result.rows[0];
             }
             catch (err) {
-                throw new Error(`Could not add new book ${b.title}. Error: ${err}`);
+                throw new Error(`Failed to add the session with the following error: ${err}`);
             }
         });
     }
