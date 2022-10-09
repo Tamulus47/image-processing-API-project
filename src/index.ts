@@ -6,6 +6,7 @@ import {book_route} from './handlers/books'
 
 const app = express();
 const port = 8080;
+app.use(express.json())
 
 app.listen(port, (): void => {
   console.log(`server is running on port ${port}`);

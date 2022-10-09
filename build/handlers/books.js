@@ -17,23 +17,53 @@ const index = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(result);
 });
 const show = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = Number(req.params.id);
-    const result = yield book.show(id);
-    res.json(result);
-});
-const create = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newbook = yield book.create();
-        res.json(newbook);
+        const id = Number(req.params.id);
+        const result = yield book.show(id);
+        res.json(result);
     }
-    catch (err) {
-        res.status(400);
-        res.json(err);
+    catch (error) {
+        res.status(500).json(error);
+    }
+});
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { title, author, total_pages, type, summary } = req.body;
+        const b = { author, title, total_pages, type, summary };
+        const result = yield book.create(b);
+        res.json(result);
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+});
+const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.body.id;
+        const result = yield book.delete(id);
+        res.send(result);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});
+const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { title, author, id } = req.body;
+        const b = { title, author, id };
+        const updatedSession = yield book.update(b);
+        res.send(updatedSession);
+    }
+    catch (error) {
+        res.status(500).json(error);
     }
 });
 const book_route = (app) => {
     app.get('/books', index);
     app.get('/book/:id', show);
-    app.post('/books/newbook', create);
+    app.put('/book', update);
+    app.post('/book', create);
+    app.delete('/book', destroy);
 };
 exports.book_route = book_route;

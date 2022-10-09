@@ -19,7 +19,7 @@ class BooksStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const conn = yield DB_1.default.connect();
-                const sql = 'SELECT * FROM BOOK';
+                const sql = 'SELECT * FROM book';
                 const result = yield conn.query(sql);
                 conn.release();
                 return result.rows;
@@ -33,42 +33,55 @@ class BooksStore {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const conn = yield DB_1.default.connect();
-                const sql = `SELECT * FROM book WHERE id=(${id})`;
-                const result = yield conn.query(sql);
+                const sql = `SELECT * FROM book WHERE id=($1)`;
+                const result = yield conn.query(sql, [id]);
                 conn.release();
                 return result.rows[0];
             }
-            catch (err) {
-                throw new Error(`Could not find book ${id}. Error: ${err}`);
+            catch (error) {
+                throw new Error(`Failed to get the session with the following error: ${error}`);
             }
         });
     }
-    create() {
+    create(b) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const conn = yield DB_1.default.connect();
-                const sql = `INSERT INTO book (title, author, total_pages, type, summary) VALUES('tes1', 'tes', '3', 'tes', 'tes') RETURNING *`;
-                const result = yield conn.query(sql);
+                const sql = 'INSERT INTO book (title, author, total_pages, type, summary) VALUES($1, $2, $3, $4, $5) RETURNING *';
+                const result = yield conn.query(sql, [b.title, b.author, b.total_pages, b.type, b.summary]);
                 conn.release();
                 return result.rows[0];
             }
-            catch (err) {
-                throw new Error(`Failed to add the session with the following error: ${err}`);
+            catch (error) {
+                throw new Error(`Failed to add the session with the following error: ${error}`);
             }
         });
     }
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sql = 'DELETE FROM books WHERE id=($1)';
                 const conn = yield DB_1.default.connect();
+                const sql = 'DELETE FROM book WHERE id=($1) RETURNING *';
                 const result = yield conn.query(sql, [id]);
-                const book = result.rows[0];
                 conn.release();
-                return book;
+                return result.rows[0];
             }
-            catch (err) {
-                throw new Error(`Could not delete book ${id}. Error: ${err}`);
+            catch (error) {
+                throw new Error(`Failed to delete session with the following error: ${error}`);
+            }
+        });
+    }
+    update(b) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const conn = yield DB_1.default.connect();
+                const sql = 'UPDATE book SET title=($1), author=($2) WHERE id=($3) RETURNING *';
+                const result = yield conn.query(sql, [b.title, b.author, b.id]);
+                conn.release();
+                return result.rows[0];
+            }
+            catch (error) {
+                throw new Error(`Failed to update session with the following error: ${error}`);
             }
         });
     }

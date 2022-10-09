@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const books_1 = require("./handlers/books");
 const app = (0, express_1.default)();
 const port = 8080;
+app.use(express_1.default.json());
 app.listen(port, () => {
     console.log(`server is running on port ${port}`);
 });
